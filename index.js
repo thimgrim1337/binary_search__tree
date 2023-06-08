@@ -11,8 +11,9 @@ class Node {
 
 class Tree {
   constructor(arr) {
-    this.arr = this.removeDuplicates(arr);
-    this.root = this.buildTree(this.sortArray(this.arr));
+    if (arr === undefined) return null;
+    this.arr = this.sortArray(this.removeDuplicates(arr));
+    this.root = this.buildTree(this.arr);
   }
 
   removeDuplicates = (arr) => [...new Set(arr)];
@@ -27,13 +28,21 @@ class Tree {
     root.setLeftNode(this.buildTree(arr, start, mid - 1));
     root.setRightNode(this.buildTree(arr, mid + 1, end));
 
-    // console.log(root);
+    return root;
+  };
+
+  insert = (value, root = this.root) => {
+    if (root === null) return (root = new Node(value));
+    if (value < root.value) root.setLeftNode(this.insert(value, root.leftNode));
+    if (value > root.value)
+      root.setRightNode(this.insert(value, root.rightNode));
     return root;
   };
 }
 
 const arr = [1, 7, 7, 4, 23, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 const tree = new Tree(arr);
+tree.insert(1000);
 
 const prettyPrint = (node, prefix = '', isLeft = true) => {
   if (node === null) {
