@@ -63,12 +63,20 @@ class Tree {
     }
     return min;
   };
+
+  find = (value, root = this.root) => {
+    if (root === null) return null;
+    if (root.value === value) return root;
+    if (value < root.value) return this.find(value, root.leftNode);
+    if (value > root.value) return this.find(value, root.rightNode);
+  };
 }
 
 const arr = [1, 7, 7, 4, 23, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 const tree = new Tree(arr);
 tree.insert(1000);
-tree.delete(6345);
+// tree.delete(8);
+console.log(tree.find(8));
 
 const prettyPrint = (node, prefix = '', isLeft = true) => {
   if (node === null) {
@@ -83,4 +91,4 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
   }
 };
 
-prettyPrint(tree.root);
+// prettyPrint(tree.root);
