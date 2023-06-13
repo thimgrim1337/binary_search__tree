@@ -70,13 +70,46 @@ class Tree {
     if (value < root.value) return this.find(value, root.leftNode);
     if (value > root.value) return this.find(value, root.rightNode);
   };
+
+  levelOrder = (func) => {
+    if (func === undefined) return this.getValues();
+
+    return func(this.root);
+  };
+
+  getValues = (root = this.root, values = []) => {
+    if (root === null) return;
+
+    values.push(root.value);
+    this.getValues(root.leftNode, values);
+    this.getValues(root.rightNode, values);
+
+    return values;
+  };
 }
+
+const levelOrderItereted = (node) => {
+  const queue = [];
+  const visitedNode = [];
+
+  queue.push(node);
+
+  while (queue.length !== 0) {
+    if (queue[0].leftNode) queue.push(queue[0].leftNode);
+    if (queue[0].rightNode) queue.push(queue[0].rightNode);
+
+    visitedNode.push(queue.shift().value);
+  }
+
+  return visitedNode;
+};
 
 const arr = [1, 7, 7, 4, 23, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 const tree = new Tree(arr);
 tree.insert(1000);
 // tree.delete(8);
-console.log(tree.find(8));
+// console.log(tree.find(8));
+console.log(tree.levelOrder());
 
 const prettyPrint = (node, prefix = '', isLeft = true) => {
   if (node === null) {
