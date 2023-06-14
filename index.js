@@ -11,14 +11,15 @@ class Node {
 class Tree {
   constructor(arr) {
     if (arr === undefined) return null;
-    this.arr = this.sortArray(this.removeDuplicates(arr));
+    this.arr = this.removeDuplicatesAndSort(arr);
     this.root = this.buildTree(this.arr);
   }
 
-  removeDuplicates = (arr) => [...new Set(arr)];
-  sortArray = (arr) => arr.sort((a, b) => a - b);
+  removeDuplicatesAndSort(arr) {
+    return [...new Set(arr.sort((a, b) => a - b))];
+  }
 
-  buildTree = (arr, start = 0, end = arr.length - 1) => {
+  buildTree(arr, start = 0, end = arr.length - 1) {
     if (start > end) return null;
     const mid = Math.floor((start + end) / 2);
 
@@ -28,80 +29,87 @@ class Tree {
     root.setRightNode(this.buildTree(arr, mid + 1, end));
 
     return root;
-  };
+  }
 
-  insert = (value, root = this.root) => {
-    if (root === null) return (root = new Node(value));
+  insert(value, root = this.root) {
+    if (!root) return new Node(value);
     if (value < root.value) root.setLeftNode(this.insert(value, root.leftNode));
     if (value > root.value)
       root.setRightNode(this.insert(value, root.rightNode));
-    return root;
-  };
 
-  delete = (value, root = this.root) => {
-    if (root === null) return root;
+    return root;
+  }
+
+  delete(value, root = this.root) {
+    if (!root) return root;
 
     if (value < root.value) root.setLeftNode(this.delete(value, root.leftNode));
     if (value > root.value)
       root.setRightNode(this.delete(value, root.rightNode));
     else {
-      if (root.leftNode === null) return root.rightNode;
-      if (root.rightNode === null) return root.leftNode;
+      if (!root.leftNode) return root.rightNode;
+      if (!root.rightNode) return root.leftNode;
 
       root.value = this.minValue(root.rightNode);
 
       root.rightNode = this.delete(root.value, root.rightNode);
     }
     return root;
-  };
+  }
 
-  minValue = (root) => {
+  minValue(root) {
     let min = root.value;
-    while (root.leftNode !== null) {
+    while (root.leftNode) {
       min = root.leftNode.value;
       root = root.leftNode;
     }
     return min;
-  };
+  }
 
-  find = (value, root = this.root) => {
-    if (root === null) return null;
+  find(value, root = this.root) {
+    if (!root) return null;
     if (root.value === value) return root;
     if (value < root.value) return this.find(value, root.leftNode);
     if (value > root.value) return this.find(value, root.rightNode);
-  };
+  }
 
-  getValues = (root = this.root, values = []) => {
-    if (root === null) return;
+  getValues(root = this.root, values = []) {
+    if (!root) return;
 
     values.push(root.value);
     this.getValues(root.leftNode, values);
     this.getValues(root.rightNode, values);
 
     return values;
-  };
+  }
 
-  levelOrder = (func) => {
-    if (func === undefined) return this.getValues();
-
-    return func;
-  };
-
-  levelOrderIterative = (root = this.root, queue = [], visitedNodes = []) => {
+  levelOrderIterative(
+    callback,
+    root = this.root,
+    queue = [],
+    visitedNodes = []
+  ) {
     queue.push(root);
 
     while (queue.length) {
       if (queue[0].leftNode) queue.push(queue[0].leftNode);
       if (queue[0].rightNode) queue.push(queue[0].rightNode);
 
-      visitedNodes.push(queue.shift().value);
+      visitedNodes.push(queue[0].value);
+      if (callback) callback(queue[0]);
+      queue.shift();
     }
 
-    return visitedNodes;
-  };
+    if (!callback) return visitedNodes;
+  }
 
-  levelOrderRecursive = (root = this.root, queue = [], visitedNodes = []) => {
-    if (root === null) return;
+  levelOrderRecursive(
+    callback,
+    root = this.root,
+    queue = [],
+    visitedNodes = []
+  ) {
+    if (!root) return;
 
     visitedNodes.push(root.value);
 
@@ -110,14 +118,15 @@ class Tree {
 
     while (queue.length) {
       const currentNode = queue[0];
+      if (callback) callback(currentNode);
       queue.shift();
-      this.levelOrderRecursive(currentNode, queue, visitedNodes);
+      this.levelOrderRecursive(callback, currentNode, queue, visitedNodes);
     }
 
-    return visitedNodes;
-  };
+    if (!callback) return visitedNodes;
+  }
 
-  height = (root = this.root) => {
+  height(root = this.root) {
     if (root === null) return 0;
 
     const leftNodeHeight = this.height(root.leftNode);
@@ -125,16 +134,7 @@ class Tree {
 
     if (leftNodeHeight > rightNodeHeight) return leftNodeHeight + 1;
     else return rightNodeHeight + 1;
-  };
-
-  getCurrentTreeLevel = (root, level) => {
-    if (root === null) return;
-    if (level === 1) return root.value;
-    if (level > 1) {
-      this.getCurrentTreeLevel(root.leftNode, level - 1);
-      this.getCurrentTreeLevel(root.rightNode, level - 1);
-    }
-  };
+  }
 }
 
 const arr = [1, 7, 7, 4, 23, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
@@ -144,8 +144,8 @@ tree.insert(1000);
 // console.log(tree.find(8));
 // console.log(tree.getTreeHeight());
 // console.log(tree.levelOrder());
-// console.log(tree.levelOrder(tree.levelOrderIterative()));
-// console.log(tree.levelOrder(tree.levelOrderRecursive()));
+// console.log(tree.levelOrderIterative());
+// console.log(tree.levelOrderRecursive());
 
 const prettyPrint = (node, prefix = '', isLeft = true) => {
   if (node === null) {
@@ -160,4 +160,4 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
   }
 };
 
-// prettyPrint(tree.root);
+prettyPrint(tree.root);
