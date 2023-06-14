@@ -71,12 +71,6 @@ class Tree {
     if (value > root.value) return this.find(value, root.rightNode);
   };
 
-  levelOrder = (func) => {
-    if (func === undefined) return this.getValues();
-
-    return func(this.root);
-  };
-
   getValues = (root = this.root, values = []) => {
     if (root === null) return;
 
@@ -86,30 +80,72 @@ class Tree {
 
     return values;
   };
+
+  levelOrder = (func) => {
+    if (func === undefined) return this.getValues();
+
+    return func;
+  };
+
+  levelOrderIterative = (root = this.root, queue = [], visitedNodes = []) => {
+    queue.push(root);
+
+    while (queue.length) {
+      if (queue[0].leftNode) queue.push(queue[0].leftNode);
+      if (queue[0].rightNode) queue.push(queue[0].rightNode);
+
+      visitedNodes.push(queue.shift().value);
+    }
+
+    return visitedNodes;
+  };
+
+  levelOrderRecursive = (root = this.root, queue = [], visitedNodes = []) => {
+    if (root === null) return;
+
+    visitedNodes.push(root.value);
+
+    queue.push(root.leftNode);
+    queue.push(root.rightNode);
+
+    while (queue.length) {
+      const currentNode = queue[0];
+      queue.shift();
+      this.levelOrderRecursive(currentNode, queue, visitedNodes);
+    }
+
+    return visitedNodes;
+  };
+
+  height = (root = this.root) => {
+    if (root === null) return 0;
+
+    const leftNodeHeight = this.height(root.leftNode);
+    const rightNodeHeight = this.height(root.rightNode);
+
+    if (leftNodeHeight > rightNodeHeight) return leftNodeHeight + 1;
+    else return rightNodeHeight + 1;
+  };
+
+  getCurrentTreeLevel = (root, level) => {
+    if (root === null) return;
+    if (level === 1) return root.value;
+    if (level > 1) {
+      this.getCurrentTreeLevel(root.leftNode, level - 1);
+      this.getCurrentTreeLevel(root.rightNode, level - 1);
+    }
+  };
 }
-
-const levelOrderItereted = (node) => {
-  const queue = [];
-  const visitedNode = [];
-
-  queue.push(node);
-
-  while (queue.length !== 0) {
-    if (queue[0].leftNode) queue.push(queue[0].leftNode);
-    if (queue[0].rightNode) queue.push(queue[0].rightNode);
-
-    visitedNode.push(queue.shift().value);
-  }
-
-  return visitedNode;
-};
 
 const arr = [1, 7, 7, 4, 23, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 const tree = new Tree(arr);
 tree.insert(1000);
 // tree.delete(8);
 // console.log(tree.find(8));
-console.log(tree.levelOrder());
+// console.log(tree.getTreeHeight());
+// console.log(tree.levelOrder());
+// console.log(tree.levelOrder(tree.levelOrderIterative()));
+// console.log(tree.levelOrder(tree.levelOrderRecursive()));
 
 const prettyPrint = (node, prefix = '', isLeft = true) => {
   if (node === null) {
