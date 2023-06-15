@@ -169,15 +169,26 @@ class Tree {
   }
 
   isBalanced(root = this.root) {
-    return this.height(root.leftNodeHeight) - this.height(root.rightNode) <= 1
-      ? true
-      : false;
+    let leftNodeHeight = this.height(root.leftNode);
+    let rightNodeHeight = this.height(root.rightNode);
+    let temp = undefined;
+
+    if (rightNodeHeight > leftNodeHeight) {
+      temp = leftNodeHeight;
+      leftNodeHeight = rightNodeHeight;
+      rightNodeHeight = temp;
+    }
+
+    return leftNodeHeight - rightNodeHeight <= 1 ? true : false;
   }
 }
 
-const arr = [1, 7, 7, 4, 23, 23, 8];
+const arr = [1, 7, 7, 4, 23, 8, 9, 9, 4, 4, 3, 5, 7, 9, 9, 67, 6345, 324];
 const tree = new Tree(arr);
-// tree.insert(1000);
+tree.insert(1000);
+tree.insert(1001);
+tree.insert(1002);
+
 // tree.delete(8);
 // console.log(tree.find(8));
 // console.log(tree.levelOrder());
