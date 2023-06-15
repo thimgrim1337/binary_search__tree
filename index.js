@@ -126,14 +126,13 @@ class Tree {
     if (!callback) return visitedNodes;
   }
 
-  height(root = this.root) {
-    if (root === null) return 0;
+  inorder(root = this.root, visitedNodes = []) {
+    if (!root) return;
+    this.inorder(root.leftNode, visitedNodes);
+    visitedNodes.push(root.value);
+    this.inorder(root.rightNode, visitedNodes);
 
-    const leftNodeHeight = this.height(root.leftNode);
-    const rightNodeHeight = this.height(root.rightNode);
-
-    if (leftNodeHeight > rightNodeHeight) return leftNodeHeight + 1;
-    else return rightNodeHeight + 1;
+    return visitedNodes;
   }
 }
 
@@ -146,6 +145,7 @@ tree.insert(1000);
 // console.log(tree.levelOrder());
 // console.log(tree.levelOrderIterative());
 // console.log(tree.levelOrderRecursive());
+console.log(tree.inorder());
 
 const prettyPrint = (node, prefix = '', isLeft = true) => {
   if (node === null) {
