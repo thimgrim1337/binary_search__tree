@@ -143,6 +143,15 @@ class Tree {
 
     return visitedNodes;
   }
+
+  postorder(root = this.root, visitedNodes = []) {
+    if (!root) return;
+    this.postorder(root.leftNode, visitedNodes);
+    this.postorder(root.rightNode, visitedNodes);
+    visitedNodes.push(root.value);
+
+    return visitedNodes;
+  }
 }
 
 const arr = [1, 7, 7, 4, 23, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
@@ -156,6 +165,7 @@ tree.insert(1000);
 // console.log(tree.levelOrderRecursive());
 console.log(tree.inorder());
 console.log(tree.preorder());
+console.log(tree.postorder());
 
 const prettyPrint = (node, prefix = '', isLeft = true) => {
   if (node === null) {
