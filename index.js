@@ -152,20 +152,31 @@ class Tree {
 
     return visitedNodes;
   }
+
+  height(root = this.root) {
+    if (!root) return 0;
+
+    let leftNodeHeight = this.height(root.leftNode);
+    let rightNodeHeight = this.height(root.rightNode);
+
+    return leftNodeHeight > rightNodeHeight
+      ? leftNodeHeight + 1
+      : rightNodeHeight + 1;
+  }
 }
 
 const arr = [1, 7, 7, 4, 23, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 const tree = new Tree(arr);
-tree.insert(1000);
+// tree.insert(1000);
 // tree.delete(8);
 // console.log(tree.find(8));
-// console.log(tree.getTreeHeight());
 // console.log(tree.levelOrder());
 // console.log(tree.levelOrderIterative());
 // console.log(tree.levelOrderRecursive());
-console.log(tree.inorder());
-console.log(tree.preorder());
-console.log(tree.postorder());
+// console.log(tree.inorder());
+// console.log(tree.preorder());
+// console.log(tree.postorder());
+console.log(tree.height());
 
 const prettyPrint = (node, prefix = '', isLeft = true) => {
   if (node === null) {
