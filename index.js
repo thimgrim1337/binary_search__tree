@@ -73,16 +73,6 @@ class Tree {
     if (value > root.value) return this.find(value, root.rightNode);
   }
 
-  getValues(root = this.root, values = []) {
-    if (!root) return;
-
-    values.push(root.value);
-    this.getValues(root.leftNode, values);
-    this.getValues(root.rightNode, values);
-
-    return values;
-  }
-
   levelOrderIterative(
     callback,
     root = this.root,
@@ -154,7 +144,7 @@ class Tree {
   }
 
   height(root = this.root) {
-    if (!root) return 0;
+    if (!root) return -1;
 
     let leftNodeHeight = this.height(root.leftNode);
     let rightNodeHeight = this.height(root.rightNode);
@@ -162,6 +152,19 @@ class Tree {
     return leftNodeHeight > rightNodeHeight
       ? leftNodeHeight + 1
       : rightNodeHeight + 1;
+  }
+
+  depth(node, root = this.root) {
+    if (!root) return -1;
+    let dist = -1;
+
+    if (
+      root.value === node.value ||
+      (dist = this.depth(node, root.leftNode) >= 0) ||
+      (dist = this.depth(node, root.rightNode)) >= 0
+    )
+      return dist + 1;
+    return dist;
   }
 }
 
@@ -176,7 +179,9 @@ const tree = new Tree(arr);
 // console.log(tree.inorder());
 // console.log(tree.preorder());
 // console.log(tree.postorder());
-console.log(tree.height());
+const node = tree.find(324);
+// console.log(tree.height(node));
+console.log(tree.depth(node));
 
 const prettyPrint = (node, prefix = '', isLeft = true) => {
   if (node === null) {
