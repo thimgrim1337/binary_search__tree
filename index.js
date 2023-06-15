@@ -181,14 +181,15 @@ class Tree {
 
     return leftNodeHeight - rightNodeHeight <= 1 ? true : false;
   }
+
+  rebalance() {
+    this.root = this.buildTree(this.inorder());
+  }
 }
 
 const arr = [1, 7, 7, 4, 23, 8, 9, 9, 4, 4, 3, 5, 7, 9, 9, 67, 6345, 324];
 const tree = new Tree(arr);
 tree.insert(1000);
-tree.insert(1001);
-tree.insert(1002);
-
 // tree.delete(8);
 // console.log(tree.find(8));
 // console.log(tree.levelOrder());
@@ -200,7 +201,8 @@ tree.insert(1002);
 // const node = tree.find(324);
 // console.log(tree.height(node));
 // console.log(tree.depth());
-console.log(tree.isBalanced());
+// console.log(tree.isBalanced());
+console.log(tree.rebalance());
 
 const prettyPrint = (node, prefix = '', isLeft = true) => {
   if (node === null) {
